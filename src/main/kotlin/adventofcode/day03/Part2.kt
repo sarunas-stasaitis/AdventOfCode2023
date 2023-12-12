@@ -1,6 +1,7 @@
 package adventofcode.day03
 
 import adventofcode.Input
+import adventofcode.Matrix
 
 fun main() {
     val lines = Input(Part2::class.java).map { ".$it." }.toMutableList()

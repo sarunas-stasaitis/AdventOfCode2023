@@ -1,13 +1,42 @@
-package adventofcode.day03
+package adventofcode
+
+import java.io.PrintStream
+import java.io.PrintWriter
 
 class Matrix (val width: Int, val height: Int) : Iterable<Matrix.Cell> {
+
+    companion object {
+        fun fromLines(lines: List<String>): Matrix {
+            val matrix = Matrix(lines[0].length, lines.size)
+            for (y in lines.indices) {
+                for (x in 0 until lines[0].length) {
+                    matrix[x, y] = lines[y][x]
+                }
+            }
+            return matrix
+        }
+    }
 
     val matrix = Array(width) { Array(height) { '0' } }
 
     operator fun get(x: Int, y: Int) = matrix[x][y]
 
+    fun relativeGet(x: Int, y: Int, dx: Int, dy: Int): Char {
+        return matrix[x + dx][y + dy]
+    }
+
+    fun relativeGet(x: Int, y: Int, direction: CardinalDirection4): Char {
+        return relativeGet(x, y, direction.dx, direction.dy)
+    }
+
     operator fun set(x: Int, y: Int, value: Char) {
         matrix[x][y] = value
+    }
+
+    fun neighbours(cell: Cell): Matrix = neighbours(cell.x, cell.y)
+
+    fun neighbours(x: Int, y: Int) : Matrix {
+        return doSubmatrix(x - 1, y - 1, 3, 3)
     }
 
     fun submatrix(x: Int, y: Int, width: Int, height: Int): Matrix {
@@ -31,6 +60,33 @@ class Matrix (val width: Int, val height: Int) : Iterable<Matrix.Cell> {
             }
         }
         return submatrix
+    }
+
+    fun copy() : Matrix {
+        val copy = Matrix(width, height)
+        for (y in 0 until height) {
+            for (x in 0 until width) {
+                copy[x, y] = this[x, y]
+            }
+        }
+        return copy
+    }
+
+    fun contains(point: Point): Boolean {
+        return contains(point.x, point.y)
+    }
+
+    fun contains(x: Int, y: Int): Boolean {
+        return x in 0..<width && y in 0..<height
+    }
+
+    fun print(out: PrintStream) {
+        for (y in 0 until height) {
+            for (x in 0 until width) {
+                out.print(matrix[x][y])
+            }
+            out.println()
+        }
     }
 
     override fun toString(): String {

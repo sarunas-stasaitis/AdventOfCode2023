@@ -8,7 +8,7 @@ class Input(private val glue: Class<*>) : Iterable<String> {
 
     override fun iterator(): Iterator<String> = InputIterator(glue)
 
-    fun toList(): List<String> {
+    fun toList(): MutableList<String> {
         return seq().toList()
     }
 
