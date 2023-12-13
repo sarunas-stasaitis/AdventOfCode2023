@@ -2,8 +2,21 @@ package adventofcode
 
 import java.io.PrintStream
 import java.io.PrintWriter
+import java.security.cert.TrustAnchor
 
-class Matrix (val width: Int, val height: Int) : Iterable<Matrix.Cell> {
+class Matrix (
+    width: Int,
+    height: Int
+) : Iterable<Matrix.Cell> {
+
+    var width: Int
+        private set
+    var height: Int
+        private set
+
+    init {
+        this.width = width
+        this.height = height    }
 
     companion object {
         fun fromLines(lines: List<String>): Matrix {
@@ -15,9 +28,17 @@ class Matrix (val width: Int, val height: Int) : Iterable<Matrix.Cell> {
             }
             return matrix
         }
+
+        fun fromInput(input: Input): Matrix {
+            return fromLines(input.toList())
+        }
+
+        fun fromInput(anchor: Class<*>): Matrix {
+            return fromInput(Input(anchor))
+        }
     }
 
-    val matrix = Array(width) { Array(height) { '0' } }
+    var matrix = Array(width) { Array(height) { '0' } }
 
     operator fun get(x: Int, y: Int) = matrix[x][y]
 
@@ -70,6 +91,13 @@ class Matrix (val width: Int, val height: Int) : Iterable<Matrix.Cell> {
             }
         }
         return copy
+    }
+
+    fun row(y: Int): Array<Char> {
+        return matrix.map { it[y] }.toTypedArray()
+    }
+    fun column(x: Int): Array<Char> {
+        return matrix[x]
     }
 
     fun contains(point: Point): Boolean {
